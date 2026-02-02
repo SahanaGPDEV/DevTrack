@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Tracker - DevTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">DevTrack</div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+                <a href="logs.html" class="nav-item"><i class="fas fa-clock"></i><span>Daily Logs</span></a>
+                <a href="dsa.html" class="nav-item active"><i class="fas fa-code"></i><span>DSA Tracker</span></a>
+                <a href="goals.html" class="nav-item"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+                <a href="skills.html" class="nav-item"><i class="fas fa-layer-group"></i><span>Skills</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">D</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Developer</div>
+                        <div class="user-email" id="userEmail">user@email.com</div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-block" style="margin-top: 1rem;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">DSA Tracker</h1>
+                    <p class="page-subtitle">Track your problem-solving progress</p>
+                </div>
+                <button class="btn btn-primary" onclick="openProblemModal()">
+                    <i class="fas fa-plus"></i> Add Problem
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <select class="filter-select" id="filterDifficulty" onchange="filterProblems()">
+                    <option value="">All Difficulties</option>
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HARD">Hard</option>
+                </select>
+                <select class="filter-select" id="filterPlatform" onchange="filterProblems()">
+                    <option value="">All Platforms</option>
+                    <option value="LEETCODE">LeetCode</option>
+                    <option value="HACKERRANK">HackerRank</option>
+                    <option value="CODECHEF">CodeChef</option>
+                    <option value="CODEFORCES">Codeforces</option>
+                    <option value="GFG">GeeksforGeeks</option>
+                </select>
+            </div>
+
+            <!-- Problems Table -->
+            <div class="chart-card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Platform</th>
+                            <th>Difficulty</th>
+                            <th>Topic</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="problemsTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-code"></i>
+                                <h3>No problems yet</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Problem Modal -->
+    <div class="modal-overlay" id="problemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="problemModalTitle">Add Problem</h3>
+                <button class="modal-close" onclick="closeProblemModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="problemForm">
+                <input type="hidden" id="editProblemId">
+                <div class="form-group">
+                    <label for="problemTitle">Problem Title</label>
+                    <input type="text" id="problemTitle" required placeholder="e.g., Two Sum">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="problemPlatform">Platform</label>
+                        <select id="problemPlatform" required>
+                            <option value="LEETCODE">LeetCode</option>
+                            <option value="HACKERRANK">HackerRank</option>
+                            <option value="CODECHEF">CodeChef</option>
+                            <option value="CODEFORCES">Codeforces</option>
+                            <option value="GFG">GeeksforGeeks</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="problemDifficulty">Difficulty</label>
+                        <select id="problemDifficulty" required>
+                            <option value="EASY">Easy</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HARD">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="problemTopic">Topic</label>
+                        <input type="text" id="problemTopic" placeholder="e.g., Arrays, DP">
+                    </div>
+                    <div class="form-group">
+                        <label for="problemDate">Solved Date</label>
+                        <input type="date" id="problemDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="problemLink">Problem Link</label>
+                    <input type="url" id="problemLink" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label for="problemNotes">Notes</label>
+                    <textarea id="problemNotes" placeholder="Your approach or learnings..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeProblemModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    <script src="js/api.js"></script>
+    <script src="js/dsa.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals - DevTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">DevTrack</div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+                <a href="logs.html" class="nav-item"><i class="fas fa-clock"></i><span>Daily Logs</span></a>
+                <a href="dsa.html" class="nav-item"><i class="fas fa-code"></i><span>DSA Tracker</span></a>
+                <a href="goals.html" class="nav-item active"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+                <a href="skills.html" class="nav-item"><i class="fas fa-layer-group"></i><span>Skills</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">D</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Developer</div>
+                        <div class="user-email" id="userEmail">user@email.com</div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-block" style="margin-top: 1rem;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Goals</h1>
+                    <p class="page-subtitle">Set and track your development goals</p>
+                </div>
+                <button class="btn btn-primary" onclick="openGoalModal()">
+                    <i class="fas fa-plus"></i> New Goal
+                </button>
+            </div>
+
+            <!-- Goals Tabs -->
+            <div class="filters">
+                <button class="btn btn-secondary active" id="tabActive" onclick="showTab('active')">Active</button>
+                <button class="btn btn-secondary" id="tabCompleted" onclick="showTab('completed')">Completed</button>
+            </div>
+
+            <!-- Goals List -->
+            <div class="goals-list" id="goalsList">
+                <div class="empty-state">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>No goals yet</h3>
+                    <p>Create your first goal to get started</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Goal Modal -->
+    <div class="modal-overlay" id="goalModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="goalModalTitle">New Goal</h3>
+                <button class="modal-close" onclick="closeGoalModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="goalForm">
+                <input type="hidden" id="editGoalId">
+                <div class="form-group">
+                    <label for="goalTitle">Goal Title</label>
+                    <input type="text" id="goalTitle" required placeholder="e.g., Solve 50 LeetCode problems">
+                </div>
+                <div class="form-group">
+                    <label for="goalDescription">Description</label>
+                    <textarea id="goalDescription" placeholder="Describe your goal..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goalType">Goal Type</label>
+                        <select id="goalType" required>
+                            <option value="WEEKLY">Weekly</option>
+                            <option value="MONTHLY">Monthly</option>
+                            <option value="CUSTOM">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="goalCategory">Category</label>
+                        <select id="goalCategory" required>
+                            <option value="CODING_HOURS">Coding Hours</option>
+                            <option value="DSA_PROBLEMS">DSA Problems</option>
+                            <option value="PROJECTS">Projects</option>
+                            <option value="LEARNING">Learning</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goalTarget">Target Value</label>
+                        <input type="number" id="goalTarget" min="1" required placeholder="e.g., 50">
+                    </div>
+                    <div class="form-group">
+                        <label for="goalPriority">Priority</label>
+                        <select id="goalPriority">
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goalStartDate">Start Date</label>
+                        <input type="date" id="goalStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="goalEndDate">End Date</label>
+                        <input type="date" id="goalEndDate" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Progress Modal -->
+    <div class="modal-overlay" id="progressModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Progress</h3>
+                <button class="modal-close" onclick="closeProgressModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="progressForm">
+                <input type="hidden" id="progressGoalId">
+                <div class="form-group">
+                    <label for="progressValue">Add Progress</label>
+                    <input type="number" id="progressValue" min="1" required placeholder="e.g., 5">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeProgressModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    <script src="js/api.js"></script>
+    <script src="js/goals.js"></script>
+</body>
+
+</html>
