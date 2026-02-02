@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DevTrack</title>
+    <meta name="description" content="Your developer productivity dashboard - track hours, DSA problems, and goals.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">DevTrack</div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="logs.html" class="nav-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Daily Logs</span>
+                </a>
+                <a href="dsa.html" class="nav-item">
+                    <i class="fas fa-code"></i>
+                    <span>DSA Tracker</span>
+                </a>
+                <a href="goals.html" class="nav-item">
+                    <i class="fas fa-bullseye"></i>
+                    <span>Goals</span>
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Skills</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar" id="userAvatar">D</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Developer</div>
+                        <div class="user-email" id="userEmail">user@email.com</div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-block" style="margin-top: 1rem;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Welcome back! Here's your coding overview.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openQuickLogModal()">
+                    <i class="fas fa-plus"></i>
+                    Quick Log
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="dashboard-stats">
+                <div class="dashboard-stat-card primary">
+                    <div class="dashboard-stat-header">
+                        <div class="dashboard-stat-icon primary">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-stat-value" id="totalHours">0</div>
+                    <div class="dashboard-stat-label">Total Hours Coded</div>
+                </div>
+
+                <div class="dashboard-stat-card success">
+                    <div class="dashboard-stat-header">
+                        <div class="dashboard-stat-icon success">
+                            <i class="fas fa-code"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-stat-value" id="totalProblems">0</div>
+                    <div class="dashboard-stat-label">Problems Solved</div>
+                </div>
+
+                <div class="dashboard-stat-card warning">
+                    <div class="dashboard-stat-header">
+                        <div class="dashboard-stat-icon warning">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-stat-value" id="currentStreak">0</div>
+                    <div class="dashboard-stat-label">Current Streak</div>
+                </div>
+
+                <div class="dashboard-stat-card danger">
+                    <div class="dashboard-stat-header">
+                        <div class="dashboard-stat-icon danger">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-stat-value" id="activeGoals">0</div>
+                    <div class="dashboard-stat-label">Active Goals</div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Coding Hours (Last 7 Days)</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="hoursChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Problems by Difficulty</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="difficultyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="dashboard-grid">
+                <!-- Goals Progress -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h3 class="dashboard-card-title">
+                            <i class="fas fa-bullseye" style="color: var(--accent);"></i>
+                            Active Goals
+                        </h3>
+                        <a href="goals.html" class="btn btn-sm btn-secondary">View All</a>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="goals-progress-list" id="goalsProgressList">
+                            <div class="empty-state">
+                                <i class="fas fa-bullseye"></i>
+                                <h3>No Active Goals</h3>
+                                <p>Create goals to track your progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Streak Display -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h3 class="dashboard-card-title">
+                            <i class="fas fa-fire" style="color: var(--danger);"></i>
+                            Your Streak
+                        </h3>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="streak-display">
+                            <div class="streak-flame">🔥</div>
+                            <div class="streak-count" id="streakDisplay">0</div>
+                            <div class="streak-label">Day Streak</div>
+                            <div class="streak-best">
+                                Best: <span id="longestStreak">0</span> days
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Summary -->
+            <div class="dashboard-card" style="margin-top: 1.5rem;">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title">
+                        <i class="fas fa-chart-bar" style="color: var(--primary);"></i>
+                        This Week's Summary
+                    </h3>
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="weekly-summary">
+                        <div class="weekly-stat">
+                            <div class="weekly-stat-value" id="weeklyHours">0</div>
+                            <div class="weekly-stat-label">Hours Coded</div>
+                        </div>
+                        <div class="weekly-stat">
+                            <div class="weekly-stat-value" id="weeklyProblems">0</div>
+                            <div class="weekly-stat-label">Problems Solved</div>
+                        </div>
+                        <div class="weekly-stat">
+                            <div class="weekly-stat-value" id="avgHours">0</div>
+                            <div class="weekly-stat-label">Avg Hours/Day</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Log Modal -->
+    <div class="modal-overlay" id="quickLogModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Log</h3>
+                <button class="modal-close" onclick="closeQuickLogModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="quickLogForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="logDate">Date</label>
+                        <input type="date" id="logDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="logHours">Hours Coded</label>
+                        <input type="number" id="logHours" step="0.5" min="0" max="24" placeholder="e.g., 4.5" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="logDescription">What did you work on?</label>
+                    <textarea id="logDescription" placeholder="Describe your work..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="logTechnologies">Technologies Used</label>
+                    <input type="text" id="logTechnologies" placeholder="e.g., Java, Spring Boot, React">
+                </div>
+                <div class="form-group">
+                    <label>Mood</label>
+                    <div class="mood-selector">
+                        <div class="mood-option" data-mood="GREAT">
+                            <div class="emoji">😄</div>
+                            <div class="label">Great</div>
+                        </div>
+                        <div class="mood-option" data-mood="GOOD">
+                            <div class="emoji">🙂</div>
+                            <div class="label">Good</div>
+                        </div>
+                        <div class="mood-option selected" data-mood="OKAY">
+                            <div class="emoji">😐</div>
+                            <div class="label">Okay</div>
+                        </div>
+                        <div class="mood-option" data-mood="TIRED">
+                            <div class="emoji">😴</div>
+                            <div class="label">Tired</div>
+                        </div>
+                        <div class="mood-option" data-mood="FRUSTRATED">
+                            <div class="emoji">😤</div>
+                            <div class="label">Frustrated</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeQuickLogModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Log
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
